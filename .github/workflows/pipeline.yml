@@ -1,16 +1,15 @@
-﻿name: Central Roast Pipeline Automation
+name: Central Roast Data Pipeline
 
 on:
-  schedule:
-    - cron: '0 2 * * *' # Runs everyday at 2:00 AM UTC
-  workflow_dispatch:      # Allows you to trigger it manually from GitHub UI
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: # This allows you to run the pipeline manually with one click from GitHub!
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Check out repository code
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -18,15 +17,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install psycopg2-binary faker
+          pip install duckdb pandas
 
-      - name: Run Data Generator (Ingestion)
-        run: |
-          python data_generation_script.py
+      - name: Run Silver Layer Transformation
+        run: python scripts/transform_silver_layer.py
 
-      - name: Run SQL Transformations (Star Schema Load)
-        run: |
-          echo "Pipeline steps completed successfully!"
+      - name: Run Gold Layer Transformation
+        run: python scripts/transform_gold_layer.py
