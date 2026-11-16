@@ -3,7 +3,9 @@ name: Central Roast Data Pipeline
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch: # This allows you to run the pipeline manually with one click from GitHub!
+  workflow_dispatch:  # This keeps your manual "Run workflow" button
+  schedule:
+    - cron: '30 17 * * *'  # 17:30 UTC equals 11:00 PM IST
 
 jobs:
   run-pipeline:
