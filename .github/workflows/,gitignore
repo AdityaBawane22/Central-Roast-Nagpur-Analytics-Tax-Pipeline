@@ -1,0 +1,2 @@
+data_lake/warehouse.duckdb
+pos_terminal_storage/*.db
